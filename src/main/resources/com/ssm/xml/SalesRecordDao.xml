@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.SalesRecordDao">
+
+    <resultMap id="BaseResultMap" type="com.ssm.model.SalesRecord">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="bond_name" jdbcType="VARCHAR" property="bondName" />
+        <result column="sales_name" jdbcType="VARCHAR" property="salesName" />
+        <result column="amount" jdbcType="INTEGER" property="amount" />
+        <result column="created_time" jdbcType="DATE" property="createdTime" />
+    </resultMap>
+
+    <select id="selectByCondition"  resultMap="BaseResultMap">
+        SELECT *
+        FROM salesRecord
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                id =#{id,jdbcType=INTEGER}
+            </if>
+            <if test="bond_name != null">
+                AND bond_name =#{bond_name,jdbcType=VARCHAR}
+            </if>
+            <if test="sales_name != null">
+                AND sales_name =#{sales_name,jdbcType=VARCHAR}
+            </if>
+            <if test="amount != null">
+                AND amount =#{amount ,jdbcType=INTEGER}
+            </if>
+            <if test="begin_time != null">
+                <if test="end_time != null">
+                    AND created_time &gt;=#{begin_time, jdbcType=DATE} AND created_time &lt;=#{end_time, jdbcType=DATE}
+                </if>
+            </if>
+        </trim>
+        limit 400
+    </select>
+
+    <select id="loadCSVData">
+        load data infile #{csvFile} INTO TABLE salesRecord FIELDS TERMINATED BY #{fieldsTerminator} LINES TERMINATED BY #{linesTerminator} (bond_name, sales_name, amount, created_time)
+    </select>
+</mapper>
