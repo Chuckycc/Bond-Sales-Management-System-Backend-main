@@ -33,7 +33,6 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ssm.controller"))
-                .paths(PathSelectors.ant("/user/**"))
                 .build();
     }
 
